@@ -1,19 +1,24 @@
 import './App.css'
+import * as React from "react";
 import {useState} from "react";
 import UserFeedback from "./UserFeedback.tsx";
-import * as React from "react";
 
 function App() {
+
+    type feedback = {
+        name: string,
+        message: string,
+    }
     const [name, setName] = useState<string | undefined>(undefined);
     const [message, setMessage] = useState<string | undefined>(undefined);
-    const [feedback, setFeedback] = useState(null);
+    const [feedback, setFeedback] = useState<feedback | null>({name: "", message: ""});
 
     function SendMessage(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         if (!name || !message) return;
-        setFeedback(<UserFeedback name={name} message={message} />);
-        setName(undefined);
-        setMessage(undefined);
+        setFeedback({name, message});
+        setName('');
+        setMessage('');
     }
 
     return (
@@ -23,7 +28,7 @@ function App() {
             <textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder={'Insert Message'}/>
             <button type="submit">Send</button>
         </form>
-        { feedback }
+        { feedback && <UserFeedback input={feedback} /> }
     </>
   )
 }
