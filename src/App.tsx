@@ -1,33 +1,29 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import {useState} from "react";
+import UserFeedback from "./UserFeedback.tsx";
+import * as React from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [name, setName] = useState<string | undefined>(undefined);
+    const [message, setMessage] = useState<string | undefined>(undefined);
+    const [feedback, setFeedback] = useState(null);
 
-  return (
+    function SendMessage(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        if (!name || !message) return;
+        setFeedback(<UserFeedback name={name} message={message} />);
+        setName(undefined);
+        setMessage(undefined);
+    }
+
+    return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+        <form onSubmit={(event) => SendMessage(event)} style={{width: '275px', height: '150px', display: 'flex', flexDirection: 'column', gap: '10px'}}>
+            <input value={name} onChange={(e) => setName(e.target.value)} placeholder={'Insert Name'}/>
+            <textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder={'Insert Message'}/>
+            <button type="submit">Send</button>
+        </form>
+        { feedback }
     </>
   )
 }
